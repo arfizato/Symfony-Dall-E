@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app')}}
+    {% endblock %}
+
+    <title>Generate Image Using Dall-E </title>
+    <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
+</head>
+<body>
+    <div class="bg-blue-200 min-h-screen flex items-center" >
+        <div {{ stimulus_controller('say-hello') }}
+            class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-1/2 transition-all duration-200 flex items-center content-center flex-row">
+            <input  type="text" {{ stimulus_target('say-hello', 'name') }} placeholder="Tunisian Flag high detail" 
+                    class="border border-gray-300 shadow p-3 w-full rounded mb-4" >
+
+            <button {{ stimulus_action('say-hello', 'greet') }} 
+                    class="block w-full bg-blue-500 text-white font-bold p-4 rounded-lg" >
+                Generate Image
+            </button>
+            <br>
+            <img src="https://www.bit.ly/3AQWpNd" {{ stimulus_target('say-hello', 'output') }}
+                class="w-64 aspect-square m-auto"/>
+        </div>
+    </div>
+</body>
+</html>
