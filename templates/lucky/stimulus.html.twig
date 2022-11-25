@@ -14,16 +14,16 @@
 <body>
     <div class="bg-blue-200 min-h-screen flex items-center" >
         <div {{ stimulus_controller('say-hello') }}
-            class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-1/2 transition-all duration-200 flex items-center content-center flex-row">
+            class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-1/2 transition-all duration-200 flex items-center content-center flex-col">
             <input  type="text" {{ stimulus_target('say-hello', 'name') }} placeholder="Tunisian Flag high detail" 
                     class="border border-gray-300 shadow p-3 w-full rounded mb-4" >
 
-            <button {{ stimulus_action('say-hello', 'greet') }} 
-                    class="block w-full bg-blue-500 text-white font-bold p-4 rounded-lg" >
+            <button id="genButton" {{ stimulus_action('say-hello', 'greet') }} {{stimulus_target('say-hello','button') }}
+                    class="block w-full bg-blue-500 text-white font-bold p-4 rounded-lg hover:bg-blue-700 transition-all duration-200" >
                 Generate Image
             </button>
             <br>
-            <img src="https://www.bit.ly/3AQWpNd" {{ stimulus_target('say-hello', 'output') }}
+            <img src="https://www.bit.ly/3GtgTyS" {{ stimulus_target('say-hello', 'output') }}
                 class="w-64 aspect-square m-auto"/>
         </div>
     </div>

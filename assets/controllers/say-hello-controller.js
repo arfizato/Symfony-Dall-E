@@ -2,25 +2,30 @@ import { Controller } from "@hotwired/stimulus";
 import { Configuration, OpenAIApi } from "openai";
 
 export default class extends Controller {
-	static targets = ["name", "output"];
+	static targets = ["button","name", "output"];
 
 	async greet() {
-		this.outputTarget.textContent = "waiting for URL. . .";
+		this.buttonTarget.textContent = "Waiting for Image To Load . . .";
+		this.buttonTarget.disabled = true;
+		document.querySelector("#genButton").disabled = true;
+		
 		this.outputTarget.src =await this.genImg(this.nameTarget.value);
+		
+		document.querySelector("#genButton").disabled = false;
+		this.buttonTarget.disabled = false;
+		this.buttonTarget.textContent = "Generate Image";
 	}
 
 	async genImg(input){
 		const configuration = new Configuration({
 			apiKey: "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",
 		})
-		console.log("1,",input);
-		console.log("2,",input);
 		const userinput =(String(input).length)>0 ? input : "Tunisian Flag high detail";
 		const openai = new OpenAIApi(configuration);
 		const result = await openai.createImage({
 			prompt:userinput,
 			n:1,
-			size:"1024x1024",
+			size:"512x512",
 			user:"Arfizato"
 		});
 
