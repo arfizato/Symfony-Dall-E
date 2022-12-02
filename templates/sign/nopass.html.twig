@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app')}}
+    {% endblock %}
+    <title>Login </title>
+    <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
+</head>
+<body class="bg-blue-200 font-sans text-gray-700 h-screen">
+    <div class="container h-full w-full w-screen flex justify-center items-center">
+        <div class="max-w-md w-full mx-auto">
+            {# <h1 class="text-4xl text-center mb-12 font-thin">Company</h1> #}
+
+            <div class="bg-white rounded-lg overflow-hidden shadow-2xl">
+                <h1 class="uppercase w-full text-3xl font-bold text-center m-0 py-10"> 
+                    Ma3andi Ma na3mellek, 
+                    <a href="/signup" class="underline">create a new account</a>
+                </h1>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -12,20 +12,57 @@
     <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
 </head>
 <body>
-    <div class="bg-blue-200 min-h-screen flex items-center" >
+    <div class="bg-blue-200 min-h-screen flex items-center"  >
         <div {{ stimulus_controller('say-hello') }}
             class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-1/2 transition-all duration-200 flex items-center content-center flex-col">
-            <input  type="text" {{ stimulus_target('say-hello', 'name') }} placeholder="Tunisian Flag high detail" 
+            <input  type="text" {{ stimulus_target('say-hello', 'prompt') }} placeholder="Tunisian Flag high detail" 
                     class="border border-gray-300 shadow p-3 w-full rounded mb-4" >
 
-            <button id="genButton" {{ stimulus_action('say-hello', 'greet') }} {{stimulus_target('say-hello','button') }}
+            <button id="genButton" {{ stimulus_action('say-hello', 'genButtonClicked') }} {{stimulus_target('say-hello','button') }}
                     class="block w-full bg-blue-500 text-white font-bold p-4 rounded-lg hover:bg-blue-700 transition-all duration-200" >
-                Generate Image
+                Generate  Image
             </button>
             <br>
-            <img src="https://www.bit.ly/3GtgTyS" {{ stimulus_target('say-hello', 'output') }}
+            <img src="https://ik.imagekit.io/arfizato/emptyFolder.png?ik-sdk-version=javascript-1.4.3&updatedAt=1669898782247" {{ stimulus_target('say-hello', 'output') }}
                 class="w-64 aspect-square m-auto"/>
         </div>
     </div>
+    <script>
+        // to verify if user is logged in 
+        window.onload= function(){            
+            const authToken = sessionStorage.getItem("authToken");
+            const expirationDate= sessionStorage.getItem("expirationDate");
+
+            console.log(authToken === null,authToken,"\n",(expirationDate === null),expirationDate);
+            if (authToken === null || expirationDate === null ){
+				window.location.href= "/login" ;                
+                return }
+            var myHeaders = new Headers();
+            myHeaders.append("apikey", "KEYFORSUPABASE");
+            myHeaders.append("Authorization", "Bearer KEYFORSUPABASE");
+
+            var requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
+
+            fetch("URLFORSUPABASE/rest/v1/User?select=tokenExpirationDate,authToken&authToken=eq."+authToken, requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    const res= JSON.parse(result)[0]
+                    console.log(res.authToken == authToken, res.authToken, authToken)
+                    console.log(new Date()<new Date(expirationDate), new Date(), expirationDate);
+                    if (res.authToken === authToken && new Date() < new Date(expirationDate)){
+                        console.log("already logged in");                        
+                    }else {
+                        window.location.href= "/login";
+                    }
+                    
+                })
+                .catch(error => console.log('error', error));
+
+        }
+    </script>
 </body>
 </html>

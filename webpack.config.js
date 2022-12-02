@@ -75,4 +75,9 @@ Encore
     .autoProvidejQuery()
 ;
 
-module.exports = Encore.getWebpackConfig();
+const config = Encore.getWebpackConfig();
+config.experiments={
+    topLevelAwait: true
+};
+
+module.exports = config;

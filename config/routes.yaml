@@ -9,3 +9,24 @@ app_lucky_number:
 app_stimulus:
     path: /stim
     controller: App\Controller\StimulusLController::stimulus
+
+app_genImage:
+    path: /
+    controller: App\Controller\StimulusLController::stimulus
+
+app_test:
+    path: /test
+    controller: App\Controller\TestController::login
+
+# SignUpController
+app_signup:
+    path: /signup
+    controller: App\Controller\SignUpController::signup
+
+app_login:
+    path: /login
+    controller: App\Controller\SignUpController::login
+
+app_nopass:
+    path: /nopass
+    controller: App\Controller\SignUpController::nopass

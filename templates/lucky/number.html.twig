@@ -10,7 +10,7 @@
 <body>
     <div class="bg-blue-200 min-h-screen flex items-center" >
     <div class="w-full">
-        <h2 class="text-center text-blue-400 font-bold text-2xl uppercase mb-10">
+        <h2 class="text-center text-blue-400 font-bold text-2xl uppercase mb-10" id="custom">
             {{number}}<br>  
             {{" Razebi The Text You Want To Be Displayed"}} 
         </h2>
@@ -28,12 +28,25 @@
     </div>
     </div>
 <script>
-    function getImage(){
-        const content= document.getElementById("content").value;
-        const url = `http://localhost:8000/templates/lucky/api/og?content=${content}`;
-        alert(url);
-        window.open(url,"_blank");
-    }
+    var myHeaders = new Headers();
+    myHeaders.append("apikey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4cnp4Z3Nicmx6cWZobWlpeGlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njk0NjcyNzcsImV4cCI6MTk4NTA0MzI3N30.4dShzwcyQ7YgxXsHR-VlwzwpLGKBNGvrqrjuVUBrhTQ");
+    myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4cnp4Z3Nicmx6cWZobWlpeGlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njk0NjcyNzcsImV4cCI6MTk4NTA0MzI3N30.4dShzwcyQ7YgxXsHR-VlwzwpLGKBNGvrqrjuVUBrhTQ");
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    fetch("https://exrzxgsbrlzqfhmiixip.supabase.co/rest/v1/image?select=*", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log(result);
+            
+        })
+        .catch(error => console.log('error', error));
+
+    document.getElementById("custom").innerHTML = "waw";
 </script>
 </body>
 </html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app')}}
+    {% endblock %}
+    <title>Login </title>
+    <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
+</head>
+
+<body class="bg-blue-200 font-sans text-gray-700">
+    <div {{stimulus_controller("hello")}}>
+        <input type="file" name="file" {{stimulus_target("hello","file")}}>
+        <button for="file"   {{stimulus_action("hello","upload")}}> upload </button>
+        <a href="/"> goback</a>
+        <div/>
+        <button for="file"   {{stimulus_action("hello","test")}}> test </button>
+    </div>
+</body>
+</html>
