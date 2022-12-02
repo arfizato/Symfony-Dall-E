@@ -11,10 +11,18 @@
     <title>Generate Image Using Dall-E </title>
     <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
 </head>
-<body>
-    <div class="bg-blue-200 min-h-screen flex items-center"  >
-        <div {{ stimulus_controller('say-hello') }}
-            class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-1/2 transition-all duration-200 flex items-center content-center flex-col">
+<body {{ stimulus_controller('say-hello') }}>
+    <div class="bg-blue-200 min-h-screen flex items-center justify-center"  >
+        <div class="bg-white w-10/12 absolute top-0 h-16 rounded-b-lg mx-auto flex items-center px-5 ">
+            <h2  {{stimulus_target("say-hello","username")}} class="" >Logged in as <span id="loggedUsername" class="font-bold" ></span> </h2>
+            <div class="absolute right-5 flex flex-row gap-10 ">
+                <h2> <a class="no-underline" href="/collection">Visit Collection</a> </h2>
+                <h2 {{stimulus_action("say-hello","logout")}} class="cursor-pointer" > Logout</h2>                
+            </div>
+        </div>
+        <div class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-1/2 transition-all duration-200 flex items-center 
+                content-center flex-col">
+            
             <input  type="text" {{ stimulus_target('say-hello', 'prompt') }} placeholder="Tunisian Flag high detail" 
                     class="border border-gray-300 shadow p-3 w-full rounded mb-4" >
 
@@ -38,8 +46,8 @@
 				window.location.href= "/login" ;                
                 return }
             var myHeaders = new Headers();
-            myHeaders.append("apikey", "KEYFORSUPABASE");
-            myHeaders.append("Authorization", "Bearer KEYFORSUPABASE");
+            myHeaders.append("apikey", "URLFORSUPA");
+            myHeaders.append("Authorization", "Bearer URLFORSUPA");
 
             var requestOptions = {
                 method: 'GET',
@@ -47,14 +55,16 @@
                 redirect: 'follow'
             };
 
-            fetch("URLFORSUPABASE/rest/v1/User?select=tokenExpirationDate,authToken&authToken=eq."+authToken, requestOptions)
+            fetch("KEYFORSUPA/rest/v1/User?select=tokenExpirationDate,authToken,username&authToken=eq."+authToken, requestOptions)
                 .then(response => response.text())
                 .then(result => {
-                    const res= JSON.parse(result)[0]
+                    const res= JSON.parse(result)[0];
+                    console.log(res);
                     console.log(res.authToken == authToken, res.authToken, authToken)
                     console.log(new Date()<new Date(expirationDate), new Date(), expirationDate);
                     if (res.authToken === authToken && new Date() < new Date(expirationDate)){
-                        console.log("already logged in");                        
+                        console.log("already logged in");  
+                        document.getElementById("loggedUsername").innerHTML=res.username;
                     }else {
                         window.location.href= "/login";
                     }

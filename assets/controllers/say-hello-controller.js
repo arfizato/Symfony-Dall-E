@@ -3,8 +3,8 @@ import { Configuration, OpenAIApi } from "openai";
 import { createClient } from '@supabase/supabase-js';
 import moment from 'moment';
 
-const supabaseUrl = 'URLFORSUPABASE'
-const supabaseKey = "KEYFORSUPABASE"
+const supabaseUrl = 'KEYFORSUPA'
+const supabaseKey = "URLFORSUPA"
 const supabase = createClient(supabaseUrl, supabaseKey)
 export default class extends Controller {
 	static targets = ["button","prompt", "output"];
@@ -33,7 +33,7 @@ export default class extends Controller {
 
 	async genImg(input){
 		const configuration = new Configuration({
-			apiKey: "KEYFOROPENAI",
+			apiKey: "KEYFORAPI",
 		})
 		const userinput =(String(input).length)>0 ? input : "Tunisian Flag high detail";
 		const openai = new OpenAIApi(configuration);
@@ -46,7 +46,7 @@ export default class extends Controller {
 		});
 
 		console.log(Date.now());
-		console.log("2,",result.data.data[0].b64_json);
+		// console.log("2,",result.data.data[0].b64_json);
 		sessionStorage.setItem("b64",result.data.data[0].b64_json)
 		return result.data.data[0].b64_json;
 
@@ -58,6 +58,7 @@ export default class extends Controller {
 			.from('User')
 			.select('username,userId')
 			.eq("authToken",sessionStorage.getItem("authToken"))
+		console.log("user",User[0],sessionStorage.getItem("authToken"))
 		const userId= User[0].userId;
 		const username= User[0].username;
 		console.log(User[0],usererror);

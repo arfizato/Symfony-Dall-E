@@ -11,8 +11,8 @@ import moment from 'moment';
  *
  * Delete this file or adapt it for your use!
  */
-const supabaseUrl = "URLFORSUPABASE";
-const supabaseKey = "KEYFORSUPABASE";
+const supabaseUrl = "KEYFORSUPA";
+const supabaseKey = "URLFORSUPA";
 const supabase = createClient(supabaseUrl, supabaseKey);
 export default class extends Controller {
 	static targets = ["file"];
