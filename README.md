@@ -14,6 +14,7 @@
   <li>Tailwind CSS</li>
   <li>Supabase</li>
   </ul>
+  
 # TODO: 
 
 - Find better way to hide tokens and keys
