@@ -14,3 +14,15 @@
   <li>Tailwind CSS</li>
   <li>Supabase</li>
   </ul>
+# TODO: 
+
+- Find better way to hide tokens and keys
+- Add Admin side of site
+- Add Email Feature
+- Finish readme.md
+- Touch Grass
+
+
+## Installation
+
+## Setup
