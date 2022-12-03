@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app')}}
+    {% endblock %}
+
+    <title>Generate Image Using Dall-E </title>
+    <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
+</head>
+<body  class="bg-blue-200">
+    <div class="bg-blue-200 min-h-screen h-fit flex items-center justify-center mb-10"  >
+        <div {{ stimulus_controller('say-hello') }} class="bg-white w-10/12 absolute top-0 h-16 rounded-b-lg mx-auto flex items-center px-5 ">
+            <h2  {{stimulus_target("say-hello","username")}} class="" >Logged in as <span id="loggedUsername" class="font-bold" ></span> </h2>
+            <div class="absolute right-5 flex flex-row gap-10 ">
+                <h2> <a class="no-underline" href="/">Generate Image</a> </h2>
+                <h2  class="cursor-pointer" >
+                    <a {{stimulus_action("say-hello","logout")}} class="no-underline" > Logout </a>
+                </h2>                
+            </div>
+        </div>
+        <div class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-3/4 transition-all duration-200 items-center content-center 
+                    grid grid-cols-2 gap-4 absolute top-1/4 mb-10 min-h-96">
+            
+            <div class="hidden gap-3 mx-4 items-center post " {{stimulus_target("collection","post")}} >
+                <img src="https://ik.imagekit.io/arfizato/emptyFolder.png?ik-sdk-version=javascript-1.4.3&updatedAt=1669898782247" {{ stimulus_target('collection', 'image') }}
+                    class="w-64 aspect-square m-auto rounded-lg shadow-md image "/>
+                <p class="font-extralight overflow-y-scroll overflow-ellipsis break-words max-h-64 w-36 text-left prompt" {{stimulus_target('collection','prompt') }} >
+                    Hello my name is slim shady and the real slim shady please stand up
+                </p>
+            </div>
+            <div class="hidden gap-3 mx-4 items-center post " {{stimulus_target("collection","post")}} >
+                <img src="https://ik.imagekit.io/arfizato/emptyFolder.png?ik-sdk-version=javascript-1.4.3&updatedAt=1669898782247" {{ stimulus_target('collection', 'image') }}
+                    class="w-64 aspect-square m-auto rounded-lg shadow-md image "/>
+                <p class="font-extralight overflow-y-scroll overflow-ellipsis break-words max-h-64 w-36 text-left prompt" {{stimulus_target('collection','prompt') }} >Hello my name is slim shady and the real slim shady please stand up</p>
+            </div>
+            <div class="hidden gap-3 mx-4 items-center post " {{stimulus_target("collection","post")}} >
+                <img src="https://ik.imagekit.io/arfizato/emptyFolder.png?ik-sdk-version=javascript-1.4.3&updatedAt=1669898782247" {{ stimulus_target('collection', 'image') }}
+                    class="w-64 aspect-square m-auto rounded-lg shadow-md image "/>
+                <p class="font-extralight overflow-y-scroll overflow-ellipsis break-words max-h-64 w-36 text-left prompt" {{stimulus_target('collection','prompt') }} >Hello my name is slim shady and the real slim shady please stand up</p>
+            </div>
+            <div class="hidden gap-3 mx-4 items-center post " {{stimulus_target("collection","post")}} >
+                <img src="https://ik.imagekit.io/arfizato/emptyFolder.png?ik-sdk-version=javascript-1.4.3&updatedAt=1669898782247" {{ stimulus_target('collection', 'image') }}
+                    class="w-64 aspect-square m-auto rounded-lg shadow-md image "/>
+                <p class="font-extralight overflow-y-scroll overflow-ellipsis break-words max-h-64 w-36 text-left prompt" {{stimulus_target('collection','prompt') }} >Hello my name is slim shady and the real slim shady please stand up</p>
+            </div>
+            <div class="hidden gap-3 mx-4 items-center post " {{stimulus_target("collection","post")}} >
+                <img src="https://ik.imagekit.io/arfizato/emptyFolder.png?ik-sdk-version=javascript-1.4.3&updatedAt=1669898782247" {{ stimulus_target('collection', 'image') }}
+                    class="w-64 aspect-square m-auto rounded-lg shadow-md image "/>
+                <p class="font-extralight overflow-y-scroll overflow-ellipsis break-words max-h-64 w-36 text-left prompt" {{stimulus_target('collection','prompt') }} >Hello my name is slim shady and the real slim shady please stand up</p>
+            </div>
+            <div class="hidden gap-3 mx-4 items-center post " {{stimulus_target("collection","post")}} >
+                <img src="https://ik.imagekit.io/arfizato/emptyFolder.png?ik-sdk-version=javascript-1.4.3&updatedAt=1669898782247" {{ stimulus_target('collection', 'image') }}
+                    class="w-64 aspect-square m-auto rounded-lg shadow-md image "/>
+                <p class="font-extralight overflow-y-scroll overflow-ellipsis break-words max-h-64 w-36 text-left prompt" {{stimulus_target('collection','prompt') }} >Hello my name is slim shady and the real slim shady please stand up</p>
+            </div>
+
+        </div>
+    </div>
+    
+    <script>
+        // to verify if user is logged in 
+        window.onload= function(){            
+            const authToken = sessionStorage.getItem("authToken");
+            const expirationDate= sessionStorage.getItem("expirationDate");
+
+            console.log(authToken === null,authToken,"\n",(expirationDate === null),expirationDate);
+            if (authToken === null || expirationDate === null ){
+				window.location.href= "/login" ;                
+                return }
+            var myHeaders = new Headers();
+            myHeaders.append("apikey", "KEYFORSUPA");
+            myHeaders.append("Authorization", "Bearer KEYFORSUPA");
+
+            var requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
+
+            fetch("URLFORSUPA/rest/v1/User?select=tokenExpirationDate,authToken,username,userId&authToken=eq."+authToken, requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    const res= JSON.parse(result)[0];
+                    console.log(res);
+                    console.log(res.authToken == authToken, res.authToken, authToken)
+                    console.log(new Date()<new Date(expirationDate), new Date(), expirationDate);
+                    if (res.authToken === authToken && new Date() < new Date(expirationDate)){
+                        console.log("already logged in");  
+                        document.getElementById("loggedUsername").innerHTML=res.username;
+                        fetch("URLFORSUPA/rest/v1/Image?select=prompt,url&userId=eq."+res.userId, requestOptions)
+                            .then(imgResponse => imgResponse.json())
+                            .then(imgRes => {
+                                console.log(imgRes);
+                                const posts = document.querySelectorAll(".post");
+                                const images = document.querySelectorAll(".image");
+                                const prompts = document.querySelectorAll(".prompt");
+                                for (let a = 0;a<imgRes.length;a++){
+                                    posts[a].classList.add("flex");
+                                    posts[a].classList.remove("hidden");
+                                    console.log(posts[a].classList);
+                                    images[a].setAttribute("src",imgRes[a].url);
+                                    prompts[a].innerHTML= imgRes[a].prompt;
+                                }
+
+                            })
+                            .catch(imgError => console.log('error', imgError));
+                    }else {
+                        window.location.href= "/login";
+                    }
+                    
+                })
+                .catch(error => console.log('error', error));
+
+        }
+    </script>
+</body>
+</html>

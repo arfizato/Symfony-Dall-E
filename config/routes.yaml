@@ -30,3 +30,7 @@ app_login:
 app_nopass:
     path: /nopass
     controller: App\Controller\SignUpController::nopass
+
+app_collection:
+    path: /collection
+    controller: App\Controller\CollectionController::show

@@ -3,30 +3,46 @@ import { Configuration, OpenAIApi } from "openai";
 import { createClient } from '@supabase/supabase-js';
 import moment from 'moment';
 
-const supabaseUrl = 'KEYFORSUPA'
-const supabaseKey = "URLFORSUPA"
+const supabaseUrl = 'URLFORSUPA'
+const supabaseKey = "KEYFORSUPA"
 const supabase = createClient(supabaseUrl, supabaseKey)
 export default class extends Controller {
 	static targets = ["button","prompt", "output"];
 
-
+	logout(){
+		console.log("leaving")
+		sessionStorage.clear();
+		window.location.href= "/login";
+	}
 	
 	async genButtonClicked() {
 		this.buttonTarget.textContent = "Waiting for Image To Load . . .";
 		this.buttonTarget.disabled = true;
-		// document.querySelector("#genButton").disabled = true;
 		
-		// this.outputTarget.src =await this.genImg(this.nameTarget.value);
-		
-        let url = "data:image/png;base64,"+await this.genImg(this.promptTarget.value);        
-        fetch(url)
-            .then(res => res.blob())
-            .then(file => {
-                console.log(file);
-                this.sendFileToBucket(file);
-            })
-		this.buttonTarget.color = "red";
-		// document.querySelector("#genButton").disabled = false;
+		let { data: UserCredits, userCreditsError } = await supabase
+			.from('User')
+			.select('credits')
+			.eq("authToken",sessionStorage.getItem("authToken"))
+		if (UserCredits[0].credits>0){
+			let prompt = (String(this.promptTarget.value).length)>0 ? this.promptTarget.value : "Tunisian Flag high detail" ;
+			let url = "data:image/png;base64,"+await this.genImg(prompt);        
+			fetch(url)
+				.then(res => res.blob())
+				.then(file => {
+					console.log(file);
+					this.sendFileToBucket(file);
+				})
+			
+			const { updateData, updateError } = await supabase
+				.from('User')
+				.update({ credits: UserCredits[0].credits -1})
+				.eq("authToken",sessionStorage.getItem("authToken"))
+			console.log("update log:",updateData,updateError);
+		}else{
+			this.buttonTarget.textContent = "You ran out of credits 🤑";
+			console.warn("ran out poor guy");
+		}
+
 		
 
 	}
@@ -35,7 +51,7 @@ export default class extends Controller {
 		const configuration = new Configuration({
 			apiKey: "KEYFORAPI",
 		})
-		const userinput =(String(input).length)>0 ? input : "Tunisian Flag high detail";
+		const userinput =input;
 		const openai = new OpenAIApi(configuration);
 		const result = await openai.createImage({
 			prompt:userinput,

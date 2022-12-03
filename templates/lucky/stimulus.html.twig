@@ -17,7 +17,9 @@
             <h2  {{stimulus_target("say-hello","username")}} class="" >Logged in as <span id="loggedUsername" class="font-bold" ></span> </h2>
             <div class="absolute right-5 flex flex-row gap-10 ">
                 <h2> <a class="no-underline" href="/collection">Visit Collection</a> </h2>
-                <h2 {{stimulus_action("say-hello","logout")}} class="cursor-pointer" > Logout</h2>                
+                <h2  class="cursor-pointer" >
+                    <a {{stimulus_action("say-hello","logout")}} class="no-underline" > Logout </a>
+                </h2>                
             </div>
         </div>
         <div class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-1/2 transition-all duration-200 flex items-center 
@@ -46,8 +48,8 @@
 				window.location.href= "/login" ;                
                 return }
             var myHeaders = new Headers();
-            myHeaders.append("apikey", "URLFORSUPA");
-            myHeaders.append("Authorization", "Bearer URLFORSUPA");
+            myHeaders.append("apikey", "KEYFORSUPA");
+            myHeaders.append("Authorization", "Bearer KEYFORSUPA");
 
             var requestOptions = {
                 method: 'GET',
@@ -55,7 +57,7 @@
                 redirect: 'follow'
             };
 
-            fetch("KEYFORSUPA/rest/v1/User?select=tokenExpirationDate,authToken,username&authToken=eq."+authToken, requestOptions)
+            fetch("URLFORSUPA/rest/v1/User?select=tokenExpirationDate,authToken,username&authToken=eq."+authToken, requestOptions)
                 .then(response => response.text())
                 .then(result => {
                     const res= JSON.parse(result)[0];

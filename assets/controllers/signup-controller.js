@@ -2,8 +2,8 @@
 import { Controller } from "@hotwired/stimulus";
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'KEYFORSUPA'
-const supabaseKey = "URLFORSUPA"
+const supabaseUrl = 'URLFORSUPA'
+const supabaseKey = "KEYFORSUPA"
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 export default class extends Controller {
