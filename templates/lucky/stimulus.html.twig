@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html class="scroll-smooth">
 <head>
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
@@ -11,32 +11,75 @@
     <title>Generate Image Using Dall-E </title>
     <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
 </head>
-<body {{ stimulus_controller('say-hello') }}>
-    <div class="bg-blue-200 min-h-screen flex items-center justify-center"  >
+<body class="bg-blue-200 h-fit"{{ stimulus_controller('genimage') }}>
+    <div class=" min-h-screen flex items-center justify-center"  >
+
         <div class="bg-white w-10/12 absolute top-0 h-16 rounded-b-lg mx-auto flex items-center px-5 ">
-            <h2  {{stimulus_target("say-hello","username")}} class="" >Logged in as <span id="loggedUsername" class="font-bold" ></span> </h2>
+            <h2  {{stimulus_target("genimage","username")}} class="" >
+                Logged in as 
+                <span id="loggedUsername" class="font-bold" ></span>, with
+                <span id="numberOfCredits" class="font-bold" ></span> credits
+
+            </h2>
             <div class="absolute right-5 flex flex-row gap-10 ">
+                <h2> <a id="admin" class="no-underline hidden" href="/admin">Admin Panel</a> </h2>
                 <h2> <a class="no-underline" href="/collection">Visit Collection</a> </h2>
                 <h2  class="cursor-pointer" >
-                    <a {{stimulus_action("say-hello","logout")}} class="no-underline" > Logout </a>
+                    <a {{stimulus_action("genimage","logout")}} class="no-underline" > Logout </a>
                 </h2>                
             </div>
         </div>
+
         <div class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-1/2 transition-all duration-200 flex items-center 
                 content-center flex-col">
             
-            <input  type="text" {{ stimulus_target('say-hello', 'prompt') }} placeholder="Tunisian Flag high detail" 
+            <input  type="text" {{ stimulus_target('genimage', 'prompt') }} placeholder="Tunisian Flag high detail" 
                     class="border border-gray-300 shadow p-3 w-full rounded mb-4" >
 
-            <button id="genButton" {{ stimulus_action('say-hello', 'genButtonClicked') }} {{stimulus_target('say-hello','button') }}
+            <button id="genButton" {{ stimulus_action('genimage', 'genButtonClicked') }} {{stimulus_target('genimage','button') }}
                     class="block w-full bg-blue-500 text-white font-bold p-4 rounded-lg hover:bg-blue-700 transition-all duration-200" >
                 Generate  Image
             </button>
             <br>
-            <img src="https://ik.imagekit.io/arfizato/emptyFolder.png?ik-sdk-version=javascript-1.4.3&updatedAt=1669898782247" {{ stimulus_target('say-hello', 'output') }}
-                class="w-64 aspect-square m-auto"/>
+            <img src="URLFORSUPA/storage/v1/object/public/symfony/Hey!.png" {{ stimulus_target('genimage', 'output') }}
+                class="w-64 aspect-square m-auto rounded"/>
         </div>
+
+        <a href="#imagesThisSession" class="absolute bottom-2 hidden" id="downArrowToRecent">
+            <img src="URLFORSUPA/storage/v1/object/public/symfony/arrowDown.png" class=" h-24 brightness-200 animate-bounce drop-shadow-xl" />
+        </a>
     </div>
+
+    <section id="imagesThisSession" class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-3/4 
+                transition-all duration-200 
+                items-center content-center hidden grid-cols-3 gap-4 
+                h-fit mb-10" >
+
+        {# <div class="flex flex-col justify-center items-center h-80 "> 
+            <img class="w-48 rounded-md shadow-md " src="URLFORSUPA/storage/v1/object/public/symfony/arfizato0/02-12-2022%2009:14:09.png" alt="test" />
+            <p class=" h-16 py-1 overflow-y-auto scrollbar text-center align-middle "> waw </p>
+            <button class="bg-red-600 text-white px-10 py-1 rounded-md hover:scale-90 transition-all duration-200" >Delete </button>
+        </div>
+        <div class="flex flex-col justify-center items-center h-80 "> 
+            <img class="w-48 rounded-md shadow-md " src="URLFORSUPA/storage/v1/object/public/symfony/arfizato0/02-12-2022%2009:14:09.png" alt="test" />
+            <p class=" h-16 py-1 overflow-y-auto scrollbar text-center align-middle "> waw </p>
+            <button class="bg-red-600 text-white px-10 py-1 rounded-md hover:scale-90 transition-all duration-200" >Delete </button>
+        </div>
+        <div class="flex flex-col justify-center items-center h-80 "> 
+            <img class="w-48 rounded-md shadow-md " src="URLFORSUPA/storage/v1/object/public/symfony/arfizato0/02-12-2022%2009:14:09.png" alt="test" />
+            <p class=" h-16 py-1 overflow-y-auto scrollbar text-center align-middle "> waw </p>
+            <button class="bg-red-600 text-white px-10 py-1 rounded-md hover:scale-90 transition-all duration-200" >Delete </button>
+        </div>
+        
+        <div class="flex flex-col justify-center items-center h-80 " id=${"imgInGen"+userId} {{stimulus_controller("genImg")}} > 
+            <img class="w-48 rounded-md shadow-md " src=${url} alt=${prompt} />
+            <p class=" h-16 py-1 overflow-y-auto scrollbar text-center align-middle "> ${prompt} </p>
+            <button class="bg-red-600 text-white px-10 py-1 rounded-md hover:scale-90 transition-all duration-200" 
+                data-genImg-id-param=${imageId} data-genImg-parent-param=${"imgInGen"+imageId} data-action="genImg#deleteImage">
+                Delete 
+            </button>
+        </div> #}
+    </section>
     <script>
         // to verify if user is logged in 
         window.onload= function(){            
@@ -57,7 +100,7 @@
                 redirect: 'follow'
             };
 
-            fetch("URLFORSUPA/rest/v1/User?select=tokenExpirationDate,authToken,username&authToken=eq."+authToken, requestOptions)
+            fetch("URLFORSUPA/rest/v1/User?select=tokenExpirationDate,authToken,username,role,credits&authToken=eq."+authToken, requestOptions)
                 .then(response => response.text())
                 .then(result => {
                     const res= JSON.parse(result)[0];
@@ -67,6 +110,10 @@
                     if (res.authToken === authToken && new Date() < new Date(expirationDate)){
                         console.log("already logged in");  
                         document.getElementById("loggedUsername").innerHTML=res.username;
+                        document.getElementById("numberOfCredits").innerHTML=res.credits;
+
+                        if (res.role === "Member") return 
+                        document.getElementById("admin").classList.remove("hidden");
                     }else {
                         window.location.href= "/login";
                     }
