@@ -10,7 +10,7 @@ app_stimulus:
     path: /stim
     controller: App\Controller\StimulusLController::stimulus
 
-app_genImage:
+app_genimage:
     path: /
     controller: App\Controller\StimulusLController::stimulus
 
@@ -30,7 +30,14 @@ app_login:
 app_nopass:
     path: /nopass
     controller: App\Controller\SignUpController::nopass
+app_newpass:
+    path: /newpass
+    controller: App\Controller\SignUpController::newpass
 
 app_collection:
     path: /collection
     controller: App\Controller\CollectionController::show
+
+app_admin:
+    path: /admin
+    controller: App\Controller\AdminController::admin

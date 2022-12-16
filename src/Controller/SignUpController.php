@@ -21,4 +21,8 @@ class SignUpController extends AbstractController
     {
         return $this->render('sign/nopass.html.twig', []);
     }
+    public function newpass(): Response
+    {
+        return $this->render('sign/newpass.html.twig', []);
+    }
 }
