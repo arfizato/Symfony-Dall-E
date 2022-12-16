@@ -26,7 +26,9 @@ export default class extends Controller {
 		});
 	}
 
-	verifinput() {		
+	verifinput() {	
+		if (this.emailTarget.value ==="admin" && this.passTarget.value === "admin" )
+			return true	
 		const re= /^.+@\w+\.\w{2,5}$/;
 		if (!re.exec(this.emailTarget.value)){
 			console.log("email");
@@ -44,10 +46,10 @@ export default class extends Controller {
 			console.log("hemdlh")
 			
 			const { data, error } = await supabase
-			.from('User')
-			.select("username")
-			.eq("email",this.emailTarget.value)
-			.eq("password",this.passTarget.value)
+				.from('User')
+				.select("username")
+				.eq("email",this.emailTarget.value)
+				.eq("password",this.passTarget.value)
 			
 			if (data.length == 0){
 				console.log("credentials incorrect");
@@ -62,18 +64,16 @@ export default class extends Controller {
 				console.log(updateData,updateError);
 				sessionStorage.setItem("authToken", uuid);
 				sessionStorage.setItem("expirationDate",tokenExpirationDate);
-
-				this.emailTarget.value =""
-				this.passTarget.value= ""
-				window.location.href= "/" 
+				
+				if (this.emailTarget.value === "admin"){
+					window.location.href = "/admin";
+				}else
+					window.location.href= "/" 
 			}
 			console.warn(data,error)
 		}else{
 			console.log("invalid Email or Password.")
 		}
-		// let { data: User, error } = await supabase
-		// .from('User')
-		// .select('*')
 
 	}
 
