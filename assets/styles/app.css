@@ -1,6 +1,28 @@
 body {
-    background-color: lightgray;
+	background-color: lightgray;
 }
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+	.scrollbar::-webkit-scrollbar {
+		width: 5px;
+		height: 5px;
+	}
+
+	.scrollbar::-webkit-scrollbar-track {
+		border-radius: 100vh;
+		background:  #E5E7EB;
+	}
+
+	.scrollbar::-webkit-scrollbar-thumb {
+		background: #9CA3AF;
+		border-radius: 100vh;
+		/* border: 3px solid #f6f7ed; */
+	}
+
+	.scrollbar::-webkit-scrollbar-thumb:hover {
+		background:  #6B7280;
+	}
+}

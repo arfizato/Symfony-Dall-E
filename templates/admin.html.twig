@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app')}}
+    {% endblock %}
+    <title>Admin </title>
+    <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
+</head>
+<body class="bg-blue-200">
+    <div class="bg-blue-200 min-h-screen h-fit flex justify-center mb-10" >
+        <div {{ stimulus_controller('genimage') }} 
+            class="bg-white w-10/12 absolute top-0 h-16 rounded-b-lg mx-auto flex items-center px-5 ">
+            <h2  {{stimulus_target("genimage","username")}} class="" >Logged in as <span id="loggedUsername" class="font-bold" ></span> </h2>
+            <div class="absolute right-5 flex flex-row gap-10 ">
+                <h2> <a class="no-underline hover:scale-x-110 transition-all duration-200 " href="/">Generate Image</a> </h2>
+                <h2> <a class="no-underline hover:scale-x-110 transition-all duration-200 " href="/collection">Visit Collection</a> </h2>
+                <h2  class="cursor-pointer" >
+                    <a {{stimulus_action("genimage","logout")}} class="no-underline hover:scale-110 transition-all duration-200 " > Logout </a>
+                </h2>                
+            </div>
+        </div>
+
+        <div {{stimulus_controller("admin")}} class="bg-white w-11/12 h-fit mt-20 rounded-xl transition-all duration-150 " > 
+            <nav class="w-full h-min-content flex justify-evenly bg-gray-100 rounded-t-xl py-2 ">
+                <h3> <button class=" text-lg duration-75 transition-all hover:scale-110 " {{stimulus_action("admin", "loadUsers")}} >Users </button> </h3>
+                <h3> <button class=" text-lg duration-75 transition-all hover:scale-110 " {{stimulus_action("admin", "loadImages")}} >Images </button> </h3>
+
+            </nav>
+            <div id="contentContainer" class="p-4 ">
+                <h1 class="w-full text-center my-10" > This Is The Admin Panel, Select What You Want To Moderate. </h1>                
+            </div>
+        </div>
+    </div>
+    <script>
+        // to verify if user is logged in 
+        window.onload= function(){            
+            const authToken = sessionStorage.getItem("authToken");
+            const expirationDate= sessionStorage.getItem("expirationDate");
+
+            console.log(authToken === null,authToken,"\n",(expirationDate === null),expirationDate);
+            if (authToken === null || expirationDate === null ){
+				window.location.href= "/login" ;                
+                return }
+            var myHeaders = new Headers();
+            myHeaders.append("apikey", "KEYFORSUPA");
+            myHeaders.append("Authorization", "Bearer KEYFORSUPA");
+
+            var requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
+
+            fetch("URLFORSUPA/rest/v1/User?select=tokenExpirationDate,authToken,username,role&authToken=eq."+authToken, requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    const res= JSON.parse(result)[0];
+                    console.log(res);
+                    console.log(res.authToken == authToken, res.authToken, authToken)
+                    console.log(new Date()<new Date(expirationDate), new Date(), expirationDate);
+                    if (res.authToken === authToken && new Date() < new Date(expirationDate) && res.role === "ADMIN" ){
+                        console.log("already logged in");  
+                        document.getElementById("loggedUsername").innerHTML=res.username;
+                    }else {
+                        window.location.href= "/login";
+                    }
+                    
+                })
+                .catch(error => console.log('error', error));
+
+        }
+    </script>
+</body>
+</html>
