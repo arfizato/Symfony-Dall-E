@@ -12,13 +12,11 @@
     <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
 </head>
 
-<body class="bg-blue-200 font-sans text-gray-700">
-    <div {{stimulus_controller("hello")}}>
-        <input type="file" name="file" {{stimulus_target("hello","file")}}>
-        <button for="file"   {{stimulus_action("hello","upload")}}> upload </button>
-        <a href="/"> goback</a>
-        <div/>
-        <button for="file"   {{stimulus_action("hello","test")}}> test </button>
-    </div>
+<body {{stimulus_controller("hello")}} class="bg-blue-200 font-sans text-gray-700">
+
+        <button {{stimulus_action("hello","test")}} class="m-4 px-4 py-1 bg-orange-400" > test </button>
+        <div id="div1" >
+            <p class="bg-red-900 text-white font-bold my-2   " > This is new </p>
+        </div>
 </body>
 </html>
