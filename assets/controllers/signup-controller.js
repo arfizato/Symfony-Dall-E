@@ -1,6 +1,7 @@
 
 import { Controller } from "@hotwired/stimulus";
 import { createClient } from '@supabase/supabase-js'
+import Swal from 'sweetalert2';
 
 const supabaseUrl = 'URLFORSUPA'
 const supabaseKey = "KEYFORSUPA"
@@ -25,24 +26,43 @@ export default class extends Controller {
 		});
 	}
 	
-	verifinput() {
-		if (this.nameTarget.value === ""){
-			console.log("name");
-			return false
-		}
-		const re= /^.+@\w+\.\w{2,5}$/;
+	invalidField(elem,name,full= false){ 
+		Swal.fire({
+			icon: 'error',
+			title: 'Oops...',
+			text: !full ? `${name} is invalid` : name,
+		})
+		elem.style.border= "solid 1px red";
+		elem.classList.add("animate-invalidField");
+		setTimeout(()=>{elem.classList.remove("animate-invalidField");},800 )
+		setTimeout(()=>{elem.style.border="none"},3000);
+	}
 
-		if (!re.exec(this.emailTarget.value)){
+	verifinput() {
+		const name= this.nameTarget;
+		const email= this.emailTarget;
+		const password= this.passTarget;
+		const cpassword= this.cpassTarget;
+		if (name.value === ""){
+			console.log("name");
+			this.invalidField(name,"name");
+			return false
+		}
+		
+		const re= /^.+@\w+\.\w{2,5}$/;
+		if (!re.exec(email.value)){
 			console.log("email");
+			this.invalidField(email,"email");
 			return false
 		}
-		const password= this.passTarget.value;
-		if (password.length <8 ){
+		if (password.value.length <8 ){
 			console.log("password");
+			this.invalidField(password,"password");
 			return false
 		}
-		if (this.cpassTarget.value === "" || this.cpassTarget.value != password){
-			console.log("confirm",password, this.cpassTarget.value);
+		if (cpassword.value === "" || cpassword.value != password.value){
+			console.log("confirm",password.value, cpassword.value);
+			this.invalidField(cpassword,"passwords don't match",true);
 			return false
 		}
 		return true

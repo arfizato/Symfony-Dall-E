@@ -8,11 +8,11 @@
     {% block javascripts %}
         {{ encore_entry_script_tags('app')}}
     {% endblock %}
-    <title>Login </title>
+    <title>New Password </title>
     <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
 </head>
 
-<body class="bg-blue-200 font-sans text-gray-700" >
+<body class="bg-blue-200 font-sans text-gray-700 bg-gradient-to-tr from-blue-200 to-blue-400 min-h-screen" >
     <div class="container mx-auto p-8 flex">
         <div class="max-w-md w-full mx-auto">
             <div class="bg-white rounded-lg overflow-hidden shadow-2xl">
@@ -26,13 +26,12 @@
                         </div>
 
                         <div class="mb-5">              
-                            {# <label for="confirmpassword" class="block mb-2 text-sm font-medium text-gray-600">Confirm Password</label> #}
                             <input type="password" name="confirmpassword" placeholder="Confirm Password"  {{stimulus_target('forgotpass' ,'cpass')}}
                                 class="block w-full p-3 rounded bg-gray-200 border border-transparent focus:outline-none">
                         </div>
 
                         <button class="w-full mt-4  bg-blue-500 text-white font-bold p-4 rounded-lg 
-                                    hover:bg-blue-700 transition-all duration-200" {{stimulus_action('forgotpass' ,"saveNewPassword")}} >
+                                    hover:bg-blue-700 transition-all duration-200" {{stimulus_action('forgotpass' ,"makeNewPassword")}} >
                             Change Password
                         </button>
                     </form>
@@ -46,5 +45,15 @@
             </div>
         </div>
     </div>
+    <script>
+        window.onload= function(){
+            const urlParams = new URLSearchParams(window.location.search);
+            console.log("newPassLoad:",urlParams)
+            if (!urlParams.has("authToken")){
+                window.location.href ="/nopass";
+            }
+            return
+        }
+    </script>
 </body>
 </html>

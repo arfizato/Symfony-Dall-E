@@ -11,7 +11,7 @@
     <title>Login </title>
     <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
 </head>
-<body class="bg-blue-200 font-sans text-gray-700">
+<body class="bg-blue-200 font-sans text-gray-700 bg-gradient-to-tr from-blue-200 to-blue-400 min-h-screen ">
     <div class="container mx-auto p-8 flex">
         <div class="max-w-md w-full mx-auto">
             {# <h1 class="text-4xl text-center mb-12 font-thin">Company</h1> #}
@@ -21,14 +21,14 @@
                     <form method="POST" class="" action="#" onsubmit="return false;" {{ stimulus_controller('login') }}>
                         <div class="mb-5">
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-600">Email</label>
-                            <input type="text" name="email" placeholder="Password" {{stimulus_target('login' ,'email')}} 
-                            class="block w-full p-3 rounded bg-gray-200 border border-transparent focus:outline-none">
+                            <input type="text" name="email" placeholder="JaneDoe@Hoopla.tv" {{stimulus_target('login' ,'email')}} 
+                            class="block w-full p-3 rounded bg-gray-200 border border-transparent focus:outline-none" autocomplete ="none">
                         </div>
                 
                         <div class="mb-5">
                             <label for="password" class="block mb-2 text-sm font-medium text-gray-600">Password</label>
-                            <input type="password" name="password"  placeholder="Password" {{stimulus_target('login' ,'pass')}} 
-                                class="block w-full p-3 rounded bg-gray-200 border border-transparent focus:outline-none">
+                            <input type="password" name="password"  placeholder="dqQHza2ds" {{stimulus_target('login' ,'pass')}} 
+                                class="block w-full p-3 rounded bg-gray-200 border border-transparent focus:outline-none" autocomplete ="current-password">
                         </div>
 
                         <button class="w-full mt-4  bg-blue-500 text-white font-bold p-4 rounded-lg hover:bg-blue-700 

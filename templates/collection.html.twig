@@ -11,15 +11,18 @@
     <title>Generate Image Using Dall-E </title>
     <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
 </head>
-<body  class="bg-blue-200">
+<body  class="bg-blue-200 bg-gradient-to-tr from-blue-200 to-blue-400 h-fit scrollbar">
     <div class="min-h-screen h-fit flex justify-center mb-10" >
     {# <div class="bg-blue-200  h-fit flex items-center justify-center mb-40"  > #}
         <div {{ stimulus_controller('genimage') }} class="bg-white w-10/12 absolute top-0 h-16 rounded-b-lg mx-auto flex items-center px-5 ">
-            <h2  {{stimulus_target("genimage","username")}} class="" >Logged in as <span id="loggedUsername" class="font-bold" ></span> </h2>
+            <h2  {{stimulus_target("genimage","username")}} class="" >
+                Logged in as <span id="loggedUsername" class="font-bold" ></span> 
+                , you have <span id="numOfPhotos" class="font-bold" ></span> photos
+            </h2>
             <div class="absolute right-5 flex flex-row gap-10 ">
-                <h2> <a id="admin" class="no-underline hidden" href="/admin">Admin Panel</a> </h2>
-                <h2> <a class="no-underline" href="/">Generate Image</a> </h2>
-                <h2  class="cursor-pointer" >
+                <h2   class="cursor-pointer hover:scale-x-110 transition-all duration-100" > <a id="admin" class="no-underline hidden" href="/admin">Admin Panel</a> </h2>
+                <h2   class="cursor-pointer hover:scale-x-110 transition-all duration-100" > <a class="no-underline" href="/">Generate Image</a> </h2>
+                <h2   class="cursor-pointer hover:scale-x-110 transition-all duration-100"    >
                     <a {{stimulus_action("genimage","logout")}} class="no-underline" > Logout </a>
                 </h2>                
             </div>
@@ -76,9 +79,8 @@
             let imageContainerElem= `
                 <div class="flex flex-col gap-3 mx-4 items-center post relative rounded-lg py-4 sborder-2 sborder-gray-100 sshadow-md sborder-solid sbg-gray-50 " 
                     id=${"image"+imageId} {{stimulus_controller("collection")}} >
-
                     <img src=${url} class="w-64 aspect-square m-auto rounded-lg shadow-md image" />
-                    <p class="font-extralight overflow-y-auto scrollbar overflow-ellipsis break-words h-16 w-64 text-center prompt mb-12 " 
+                    <p class="font-extralight overflow-y-auto scrollbar overflow-ellipsis break-words h-10 w-64 text-center prompt mb-12 " 
                         >${prompt}</p>
                         <button data-collection-id-param=${imageId} data-collection-parent-param=${"image"+imageId} data-action="collection#deleteImage"
                             class="bg-red-600 text-white py-2 px-4 w-64 h-10 hover:scale-90 transition-all duration-200 rounded-md absolute bottom-4 ">
@@ -122,6 +124,7 @@
                             .then(imgResponse => imgResponse.json())
                             .then(imgRes => {
                                 console.log(imgRes);
+                                document.getElementById("numOfPhotos").innerHTML=imgRes.length;
                                 for (let a=0;a<imgRes.length;a++){
                                     loadImageContainer(imgRes[a]);
                                 }

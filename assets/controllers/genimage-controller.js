@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import { Configuration, OpenAIApi } from "openai";
 import { createClient } from '@supabase/supabase-js';
+import Swal from 'sweetalert2';
 import moment from 'moment';
 
 const supabaseUrl = 'URLFORSUPA'
@@ -15,23 +16,98 @@ export default class extends Controller {
 		window.location.href= "/login";
 	}
 	
+	invalidField(elem,name,full= false){ 
+		Swal.fire({
+			icon: 'error',
+			title: 'Oops...',
+			text: !full ? `${name} is invalid` : name,
+		})
+		elem.style.border= "solid 1px red";
+		elem.classList.add("animate-invalidField");
+		setTimeout(()=>{elem.classList.remove("animate-invalidField");},800 )
+		setTimeout(()=>{elem.style.border="none"},3000);
+	}
+	async requestMoreCredits(){
+		
+		const { data:updateData,error: updateError } = await supabase
+			.from('User')
+			.update({ credits: 10})
+			.eq("authToken",sessionStorage.getItem("authToken"))
+		document.getElementById('numberOfCredits').innerHTML=10
+		console.log("update log:",updateData,updateError);
+	}
+	ranOutOfCredits(){
+		Swal.fire({
+			title: 'You Ran Out Of ',
+			text: "Do you want to request more from the admin?",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#888',
+			confirmButtonText: 'Request More credits!',
+			cancelButtonText:"Oh, Okay :( ."
+		}).then((result) => {
+			if (result.isConfirmed) {
+				this.requestMoreCredits();
+				Swal.fire(
+					'Done!',
+					'Request has been sent.',
+					'success'
+				)
+
+			}
+		})
+	}
+	IfCollectionEmpty(){
+		const elems = document.querySelector(".imgContainerElem");
+		if (!elems){
+			const p = document.getElementById("imagesThisSession");
+			p.classList.add("hidden");
+			p.classList.remove("grid");
+	
+			const down=document.getElementById("downArrowToRecent");
+			down.classList.add("hidden");
+			down.classList.remove("grid");
+
+			window.location.href= "/" ;                
+
+		}
+	}
 	async deleteImage(event){
 		console.log("Delete Image:",event.params);
 		let {id, parent} = event.params;
-		document.getElementById(parent).remove();
-		
-		const { data :ImageData , error:ImageError } = await supabase
-			.from('Image')
-			.delete()
-			.eq('imageId', id)
-			.select()
-		console.log("Image deletion: ",ImageData,ImageError);
-
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!'
+		}).then(async (result) => {
+		if (result.isConfirmed) {
+			document.getElementById(parent).remove();		
+			Swal.fire(
+				'Deleted!',
+				'Your file has been deleted.',
+				'success'
+			)	
+			const { data :ImageData , error:ImageError } = await supabase
+				.from('Image')
+				.delete()
+				.eq('imageId', id)
+				.select()
+			console.log("Image deletion: ",ImageData,ImageError);
+			this.IfCollectionEmpty()	
+		}})
 	}
 
 	async genButtonClicked() {
 		this.buttonTarget.textContent = "Waiting for Image To Load . . .";
 		this.buttonTarget.disabled = true;
+		this.buttonTarget.classList.remove("hover:bg-blue-700");
+		this.buttonTarget.classList.remove("bg-blue-500");
+		this.buttonTarget.classList.add("bg-gray-400");
 		// getting credits 
 		let { data: UserCredits, userCreditsError } = await supabase
 			.from('User')
@@ -41,10 +117,14 @@ export default class extends Controller {
 		if (UserCredits[0].credits>0){
 			let prompt = (String(this.promptTarget.value).length)>0 ? this.promptTarget.value : "Tunisian Flag high detail" ;
 			let image = await this.genImg(prompt);  
-			if (image.length<100){
-				this.outputTarget.src = image;
+			if (image.length<300){
+				this.outputTarget.src = image;			
+				this.invalidField(this.promptTarget,"The prompt is inappropriate!",true);
 				this.buttonTarget.disabled = false;
 				this.buttonTarget.textContent = "Generate Image";
+				this.buttonTarget.classList.add("hover:bg-blue-700");
+				this.buttonTarget.classList.add("bg-blue-500");
+				this.buttonTarget.classList.remove("bg-gray-400");
 				return	
 			}
 			let url = "data:image/png;base64,"+image;
@@ -55,19 +135,21 @@ export default class extends Controller {
 					this.sendFileToBucket(file,prompt);
 				})
 			
-			const { updateData, updateError } = await supabase
+			const { data:updateData,error: updateError } = await supabase
 				.from('User')
 				.update({ credits: UserCredits[0].credits -1})
 				.eq("authToken",sessionStorage.getItem("authToken"))
 			document.getElementById('numberOfCredits').innerHTML=UserCredits[0].credits -1
 			console.log("update log:",updateData,updateError);
 		}else{
-			this.buttonTarget.textContent = "You ran out of credits 🤑";
+			this.buttonTarget.disabled = false;
+			this.buttonTarget.textContent = "Generate Image";
+			this.buttonTarget.classList.add("hover:bg-blue-700");
+			this.buttonTarget.classList.add("bg-blue-500");
+			this.buttonTarget.classList.remove("bg-gray-400");
+			this.ranOutOfCredits();
 			console.warn("ran out poor guy");
 		}
-
-		
-
 	}
 
 	async genImg(input){
@@ -128,7 +210,7 @@ export default class extends Controller {
 		
 
 		const imgContainerElem=`
-        <div class="flex flex-col justify-center items-center h-80 " id=${"imgInGen"+imageId} {{stimulus_controller("genimage")}} > 
+        <div class="flex flex-col justify-center items-center h-80 imgContainerElem" id=${"imgInGen"+imageId} {{stimulus_controller("genimage")}} > 
             <img class="w-48 rounded-md shadow-md " src=${url} alt=${prompt} />
             <p class=" h-16 py-1 overflow-y-auto scrollbar text-center align-middle "> ${prompt} </p>
             <button class="bg-red-600 text-white px-10 py-1 rounded-md hover:scale-90 transition-all duration-200" 
@@ -153,6 +235,9 @@ export default class extends Controller {
 		//changing the src of the picture and the state of the button 
 		this.outputTarget.src = supabaseUrl+"/storage/v1/object/public/symfony/"+bucketData.path;
 		this.buttonTarget.disabled = false;
+		this.buttonTarget.classList.add("hover:bg-blue-700");
+		this.buttonTarget.classList.add("bg-blue-500");
+		this.buttonTarget.classList.remove("bg-gray-400");
 		this.buttonTarget.textContent = "Generate Image";	
 
 

@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { createClient } from "@supabase/supabase-js";
+import Swal from 'sweetalert2';
 import moment from 'moment';
 import { duration } from "moment/moment";
 
@@ -109,7 +110,7 @@ export default class extends Controller {
 		let { data: User, error } = await supabase
 			.from('User')
 			.select('username,userId,email,password,credits,createdAt,role')
-
+			
 		// console.log(User,error);
 		loadUserHeader();
 		User.forEach(u => {
@@ -146,23 +147,39 @@ export default class extends Controller {
 	async deleteUser(event){
 		console.log("delete",event.params)
 		const parent= document.getElementById(event.params.parent);
-
-		const { ImageData , ImageError } = await supabase
-			.from('Image')
-			.delete()
-			.eq('userId', event.params.id)
-			.select()
-		console.log("Image: ",ImageData,ImageError);
-
-		const { userData , userError } = await supabase
-			.from('User')
-			.delete()
-			.eq('userId', event.params.id)
-			.select()
-		console.log("user: ",userData,userError);
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!'
+		}).then(async(result) => {
+		if (result.isConfirmed) {
+			parent.remove();
+			const { ImageData , ImageError } = await supabase
+				.from('Image')
+				.delete()
+				.eq('userId', event.params.id)
+				.select()
+			console.log("Image: ",ImageData,ImageError);
+	
+			const { userData , userError } = await supabase
+				.from('User')
+				.delete()
+				.eq('userId', event.params.id)
+				.select()
+			console.log("user: ",userData,userError);
+			Swal.fire(
+			'Deleted!',
+			'Your file has been deleted.',
+			'success'
+			)
+		}
+		})
 		
 
-		parent.remove();
 	}	
 
 	async loadImages(){
@@ -181,14 +198,30 @@ export default class extends Controller {
 	async deleteImage(event){		
 		console.log("delete",event.params)
 		// const parent= document.getElementById(event.params.parent);
-		document.getElementById(event.params.parent).remove();
-		
-		const { ImageData , ImageError } = await supabase
-			.from('Image')
-			.delete()
-			.eq('imageId', event.params.id)
-			.select()
-		console.log("Image: ",ImageData,ImageError);
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!'
+		}).then(async(result) => {
+		if (result.isConfirmed) {
+			document.getElementById(event.params.parent).remove();			
+			const { ImageData , ImageError } = await supabase
+				.from('Image')
+				.delete()
+				.eq('imageId', event.params.id)
+				.select()
+			console.log("Image: ",ImageData,ImageError);
+			Swal.fire(
+			'Deleted!',
+			'Your file has been deleted.',
+			'success'
+			)
+		}
+		})
 	}
 }
 

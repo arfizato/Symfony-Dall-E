@@ -1,6 +1,7 @@
 
 import { Controller } from "@hotwired/stimulus";
 import { createClient } from '@supabase/supabase-js'
+import Swal from 'sweetalert2';
 
 const supabaseUrl = 'URLFORSUPA'
 const supabaseKey = "KEYFORSUPA"
@@ -26,17 +27,31 @@ export default class extends Controller {
 		});
 	}
 
+	invalidField(elem,name,full= false){ 
+		Swal.fire({
+			icon: 'error',
+			title: 'Oops...',
+			text: !full ? `${name} is invalid` : name,
+		})
+		elem.style.border= "solid 1px red";
+		elem.classList.add("animate-invalidField");
+		setTimeout(()=>{elem.classList.remove("animate-invalidField");},800 )
+		setTimeout(()=>{elem.style.border="none"},3000);
+	}
+
 	verifinput() {	
-		if (this.emailTarget.value ==="admin" && this.passTarget.value === "admin" )
-			return true	
+		if (this.emailTarget.value ==="admin" && this.passTarget.value === "admin" ) return true	
+
 		const re= /^.+@\w+\.\w{2,5}$/;
 		if (!re.exec(this.emailTarget.value)){
 			console.log("email");
+			this.invalidField(this.emailTarget,"email");
 			return false
 		}
 		const password= this.passTarget.value;
 		if (password.length <8 ){
 			console.log("password");
+			this.invalidField(this.passTarget,"password");
 			return false
 		}
 		return true
@@ -52,12 +67,13 @@ export default class extends Controller {
 				.eq("password",this.passTarget.value)
 			
 			if (data.length == 0){
+				this.invalidField(this.emailTarget,"Your credentials are incorrect!",true);
 				console.log("credentials incorrect");
 			}
 			else{
 				const tokenExpirationDate=new Date(+new Date()+60*60*24*1000);
 				const uuid = this.generateUUID();
-				const { updateData, updateError } = await supabase
+				const { data: updateData, error: updateError } = await supabase
 					.from('User')
 					.update({ authToken: uuid, tokenExpirationDate: tokenExpirationDate})
 					.eq('email', this.emailTarget.value)

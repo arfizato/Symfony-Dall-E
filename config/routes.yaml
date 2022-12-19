@@ -30,6 +30,7 @@ app_login:
 app_nopass:
     path: /nopass
     controller: App\Controller\SignUpController::nopass
+    
 app_newpass:
     path: /newpass
     controller: App\Controller\SignUpController::newpass

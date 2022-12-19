@@ -8,11 +8,11 @@
     {% block javascripts %}
         {{ encore_entry_script_tags('app')}}
     {% endblock %}
-    <title>Login </title>
+    <title>Forgot Password</title>
     <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
 </head>
 
-<body class="bg-blue-200 font-sans text-gray-700" >
+<body class="bg-blue-200 font-sans text-gray-700 bg-gradient-to-tr from-blue-200 to-blue-400 min-h-screen" >
     <div class="container mx-auto p-8 flex">
         <div class="max-w-md w-full mx-auto">
             <div class="bg-white rounded-lg overflow-hidden shadow-2xl">
@@ -21,7 +21,7 @@
                         
                         <div class="mb-5">
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-600">Email</label>
-                            <input type="text" name="email"  placeholder="Email" {{stimulus_target('forgotpass' ,'email')}} 
+                            <input type="text" name="email"  placeholder="JaneDoe@Hoopla.tv" {{stimulus_target('forgotpass' ,'email')}} 
                                 class="block w-full p-3 rounded bg-gray-200 border border-transparent focus:outline-none">
                         </div>
 

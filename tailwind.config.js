@@ -5,7 +5,34 @@ module.exports = {
     "./templates/**/*.html.twig",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation:{
+        "invalidField" : "shakeBot 0.8s both",
+      },
+      keyframes:{
+        shakeBot: {
+          "0%, 100%":{
+            transform: "rotate(0deg)"
+            // transform-origin: 50% 100%;
+          },
+          "10%": {
+            transform: "rotate(1deg)"
+          },
+          "20%, 40%, 60%": {
+            transform: "rotate(-2deg)"
+          },
+          "30%, 50%, 70%": {
+            transform: "rotate(2deg)"
+          },
+          "80%": {
+            transform: "rotate(-1deg)"
+          },
+          "90%": {
+            transform: "rotate(1deg)"
+          }
+        }
+      }
+    },
   },
   plugins: [],
 }
