@@ -75,7 +75,6 @@ function loadImageHeader(){
 	`;
 	p.insertAdjacentHTML( 'beforeend', header );
 }
-
 function loadImage(image){
 	const {imageId, url, createdAt, prompt, User} =image
 

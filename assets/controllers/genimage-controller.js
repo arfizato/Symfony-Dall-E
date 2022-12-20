@@ -101,6 +101,13 @@ export default class extends Controller {
 		}})
 	}
 
+	enableGenButtonAgain(){		
+		this.buttonTarget.disabled = false;
+		this.buttonTarget.textContent = "Generate Image";
+		this.buttonTarget.classList.add("hover:bg-blue-700");
+		this.buttonTarget.classList.add("bg-blue-500");
+		this.buttonTarget.classList.remove("bg-gray-400");
+	}
 	async genButtonClicked() {
 		this.buttonTarget.textContent = "Waiting for Image To Load . . .";
 		this.buttonTarget.disabled = true;
@@ -115,15 +122,11 @@ export default class extends Controller {
 
 		if (UserCredits[0].credits>0){
 			let prompt = (String(this.promptTarget.value).length)>0 ? this.promptTarget.value : "Tunisian Flag high detail" ;
-			let image = await this.genImg(prompt);  
+			let image = await this.fetchImageFromDallE(prompt);  
 			if (image.length<300){
 				this.outputTarget.src = image;			
 				this.invalidField(this.promptTarget,"The prompt is inappropriate!",true);
-				this.buttonTarget.disabled = false;
-				this.buttonTarget.textContent = "Generate Image";
-				this.buttonTarget.classList.add("hover:bg-blue-700");
-				this.buttonTarget.classList.add("bg-blue-500");
-				this.buttonTarget.classList.remove("bg-gray-400");
+				this.enableGenButtonAgain();
 				return	
 			}
 			let url = "data:image/png;base64,"+image;
@@ -141,20 +144,19 @@ export default class extends Controller {
 			document.getElementById('numberOfCredits').innerHTML=UserCredits[0].credits -1
 			console.log("update log:",updateData,updateError);
 		}else{
-			this.buttonTarget.disabled = false;
-			this.buttonTarget.textContent = "Generate Image";
-			this.buttonTarget.classList.add("hover:bg-blue-700");
-			this.buttonTarget.classList.add("bg-blue-500");
-			this.buttonTarget.classList.remove("bg-gray-400");
+			this.enableGenButtonAgain();
 			this.ranOutOfCredits();
 			console.warn("ran out poor guy");
 		}
 	}
 
-	async genImg(input){
+	async fetchImageFromDallE(input){
 		const configuration = new Configuration({
 			apiKey: apiKey,
 		})
+        const radio=document.querySelector('input[type="radio"]:checked');
+		const resolution= ["256x256","512x512","1024x1024"].includes(radio.value) ? radio.value : "512x512"
+
 		const userinput =input;
 		const openai = new OpenAIApi(configuration);
 		let result;
@@ -162,7 +164,7 @@ export default class extends Controller {
 			result = await openai.createImage({
 				prompt:userinput,
 				n:1,
-				size:"512x512",
+				size:resolution,
 				user:"Arfizato",
 				response_format: "b64_json"
 			});
@@ -233,11 +235,8 @@ export default class extends Controller {
 
 		//changing the src of the picture and the state of the button 
 		this.outputTarget.src = supabaseUrl+"/storage/v1/object/public/symfony/"+bucketData.path;
-		this.buttonTarget.disabled = false;
-		this.buttonTarget.classList.add("hover:bg-blue-700");
-		this.buttonTarget.classList.add("bg-blue-500");
-		this.buttonTarget.classList.remove("bg-gray-400");
-		this.buttonTarget.textContent = "Generate Image";	
+		this.enableGenButtonAgain();
+		
 
 
 		/* -------------- inserting new row to image table in database -------------- */		

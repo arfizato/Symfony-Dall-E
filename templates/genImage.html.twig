@@ -36,6 +36,24 @@
             <input  type="text" {{ stimulus_target('genimage', 'prompt') }} placeholder="Tunisian Flag high detail" 
                     class="border border-gray-300 shadow p-3 w-full rounded mb-4" >
 
+            <ul class="grid w-full gap-6 md:grid-cols-3 h-fit mb-4">
+                <li>
+                    <input type="radio" id="x256" name="resolution" value="256x256" class="peer hidden" required />
+                    <label for="x256" 
+                    class="inline-flex w-full cursor-pointer items-center justify-between rounded border border-gray-200 bg-white px-5 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-blue-600 peer-checked:text-blue-600"> 256x256 </label>
+                </li>
+                <li>
+                    <input type="radio" id="x512" name="resolution" value="512x512" class="peer hidden" checked />
+                    <label for="x512" 
+                    class="inline-flex w-full cursor-pointer items-center justify-between rounded border border-gray-200 bg-white px-5 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-blue-600 peer-checked:text-blue-600">512x512 </label>
+                </li>
+                <li>
+                    <input type="radio" id="x1024" name="resolution" value="1024x1024" class="peer hidden" />
+                    <label for="x1024" 
+                    class="inline-flex w-full cursor-pointer items-center justify-between rounded border border-gray-200 bg-white px-5 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-600 peer-checked:border-blue-600 peer-checked:text-blue-600">1024x1024 </label>
+                </li>
+            </ul>
+
             <button id="genButton" {{ stimulus_action('genimage', 'genButtonClicked') }} {{stimulus_target('genimage','button') }}
                     class="block w-full bg-blue-500 text-white font-bold p-4 rounded-lg hover:bg-blue-700 transition-all duration-200" >
                 Generate  Image
@@ -46,7 +64,7 @@
         </div>
 
         <a href="#imagesThisSession" class="absolute bottom-2 hidden" id="downArrowToRecent">
-            <img src="https://paouzswmtqahihhugxtg.supabase.co/storage/v1/object/public/symfony/arrowDown.png" class=" h-24 brightness-200 animate-bounce drop-shadow-xl" />
+            <img src="https://paouzswmtqahihhugxtg.supabase.co/storage/v1/object/public/symfony/arrowDown.png" class=" h-20 brightness-200 animate-bounce drop-shadow-xl" />
         </a>
     </div>
     <section id="imagesThisSession" class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-3/4 
