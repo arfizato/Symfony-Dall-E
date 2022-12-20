@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily:{
+        modern:["Oswald","Roboto condensed"]
+      },
       animation:{
         "invalidField" : "shakeBot 0.8s both",
       },

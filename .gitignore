@@ -27,3 +27,4 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 sendgrid.env
 .vscode/
+secrets.json

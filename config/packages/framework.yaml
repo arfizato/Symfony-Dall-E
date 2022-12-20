@@ -16,6 +16,8 @@ framework:
     #fragments: true
     php_errors:
         log: true
+    
+    error_controller: App\Controller\NotFoundController::notFound
 
 when@test:
     framework:

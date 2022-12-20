@@ -16,7 +16,20 @@
 
         <button {{stimulus_action("hello","test")}} class="m-4 px-4 py-1 bg-orange-400" > test </button>
         <div id="div1" >
-            <p class="bg-red-900 text-white font-bold my-2   " > This is new </p>
+            <p id="new"class="bg-red-900 text-white font-bold my-2   " > This is new </p>
         </div>
 </body>
+<script>
+    window.onload = function(){        
+        let supabaseKey,supabaseUrl;
+        fetch("./secrets.json")
+        .then((res)=> res.json())
+        .then((json)=>{
+            ({supabaseKey,supabaseUrl} = json) ;
+            console.warn("new1",supabaseKey, supabaseUrl)
+            document.getElementById("new").innerHTML=`new2: ${supabaseKey}<br> ${supabaseUrl} `
+        })
+        
+    }
+</script>
 </html>

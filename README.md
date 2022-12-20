@@ -8,12 +8,13 @@
 
 
 <h3>Technologies used:</h3>
+
 <ul>
   <li>Openai API</li>
   <li>Symfony</li>
   <li>Tailwind CSS</li>
   <li>Supabase</li>
-  </ul>
+</ul>
   
 # TODO: 
 

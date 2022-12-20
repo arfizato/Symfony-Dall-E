@@ -37,17 +37,32 @@
     </div>
     <script>
         // to verify if user is logged in 
-        window.onload= function(){            
+        function verifyToken(res){      
+            const authToken = sessionStorage.getItem("authToken");
+            const expirationDate= sessionStorage.getItem("expirationDate");      
+            if (res.authToken === authToken && new Date() < new Date(expirationDate) && res.role === "ADMIN" ){
+                console.log("already logged in");  
+                document.getElementById("loggedUsername").innerHTML=res.username;
+            }else {
+                window.location.href= "/login";
+            }
+        }
+        function ifLoggedIn(json){
+                    
             const authToken = sessionStorage.getItem("authToken");
             const expirationDate= sessionStorage.getItem("expirationDate");
 
             console.log(authToken === null,authToken,"\n",(expirationDate === null),expirationDate);
             if (authToken === null || expirationDate === null ){
 				window.location.href= "/login" ;                
-                return }
+                return 
+            }
+
             var myHeaders = new Headers();
-            myHeaders.append("apikey", "KEYFORSUPA");
-            myHeaders.append("Authorization", "Bearer KEYFORSUPA");
+            const {supabaseKey,supabaseUrl} = json;
+
+            myHeaders.append("apikey", supabaseKey);
+            myHeaders.append("Authorization", `Bearer ${supabaseKey}`);
 
             var requestOptions = {
                 method: 'GET',
@@ -55,23 +70,31 @@
                 redirect: 'follow'
             };
 
-            fetch("URLFORSUPA/rest/v1/User?select=tokenExpirationDate,authToken,username,role&authToken=eq."+authToken, requestOptions)
+            fetch(`${supabaseUrl}/rest/v1/User?select=tokenExpirationDate,authToken,username,role&authToken=eq.${authToken}`, requestOptions)
                 .then(response => response.text())
                 .then(result => {
                     const res= JSON.parse(result)[0];
-                    console.log(res);
-                    console.log(res.authToken == authToken, res.authToken, authToken)
-                    console.log(new Date()<new Date(expirationDate), new Date(), expirationDate);
-                    if (res.authToken === authToken && new Date() < new Date(expirationDate) && res.role === "ADMIN" ){
-                        console.log("already logged in");  
-                        document.getElementById("loggedUsername").innerHTML=res.username;
-                    }else {
-                        window.location.href= "/login";
-                    }
+                    verifyToken(res);
+
+                    console.log("admin Onload",res);
+                    //console.log(res.authToken == authToken, res.authToken, authToken)
+                    //console.log(new Date() < new Date(expirationDate), new Date(), expirationDate);
                     
                 })
-                .catch(error => console.log('error', error));
-
+                .catch(error => {console.log('error', error);
+                    window.location.href= "/404?apiURL=/admin&apiName=Admin Panel";
+                });
+        }
+        window.onload= function(){
+            fetch("./secrets.json")
+            .then((res)=> res.json())
+            .then((json)=>{
+                ifLoggedIn(json);
+            })
+            .catch(error =>{
+                console.log('error reading JS', error);
+                window.location.href= "/404";
+            });
         }
     </script>
 </body>

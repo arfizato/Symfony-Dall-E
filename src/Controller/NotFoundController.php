@@ -5,10 +5,10 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class StimulusLController extends AbstractController
+class NotFoundController extends AbstractController
 {
-    public function stimulus(): Response
+    public function notFound(): Response
     {
-        return $this->render('genImage.html.twig', []);
+        return $this->render('error.html.twig', []);
     }
 }

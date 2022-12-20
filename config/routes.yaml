@@ -2,9 +2,9 @@ controllers:
     resource: ../src/Controller/
     type: attribute
 
-app_lucky_number:
-    path: /luck
-    controller: App\Controller\LuckyController::number
+app_not_found:
+    path: /404
+    controller: App\Controller\NotFoundController::notFound
 
 app_stimulus:
     path: /stim

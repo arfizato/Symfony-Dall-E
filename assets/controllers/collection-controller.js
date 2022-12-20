@@ -3,8 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 import Swal from 'sweetalert2';
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'URLFORSUPA'
-const supabaseKey = "KEYFORSUPA"
+const {supabaseKey,supabaseUrl} = require("./secrets.json")
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 export default class extends Controller {
@@ -30,6 +29,7 @@ export default class extends Controller {
 				.eq('imageId', id)
 				.select()
 			console.log("Image: ",ImageData,ImageError);
+			document.getElementById("numOfPhotos").innerHTML= +document.getElementById("numOfPhotos").innerHTML-1
 			Swal.fire(
 				'Deleted!',
 				'Your file has been deleted.',

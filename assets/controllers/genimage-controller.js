@@ -4,8 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
-const supabaseUrl = 'URLFORSUPA'
-const supabaseKey = "KEYFORSUPA"
+const {supabaseKey,supabaseUrl,apiKey} = require("./secrets.json")
 const supabase = createClient(supabaseUrl, supabaseKey)
 export default class extends Controller {
 	static targets = ["button","prompt", "output"];
@@ -154,7 +153,7 @@ export default class extends Controller {
 
 	async genImg(input){
 		const configuration = new Configuration({
-			apiKey: "KEYFORAPI",
+			apiKey: apiKey,
 		})
 		const userinput =input;
 		const openai = new OpenAIApi(configuration);
@@ -169,7 +168,7 @@ export default class extends Controller {
 			});
 		}catch (error){
 			console.warn("OPEN AI THROWN ERROR",error);
-			return "URLFORSUPA/storage/v1/object/public/symfony/ADMIN69/16-12-2022%2012:41:05.png"//"https://cdn.discordapp.com/attachments/869334941337546782/1050535050631970866/naw-mike-epps.gif"
+			return supabaseUrl+"/storage/v1/object/public/symfony/ADMIN69/16-12-2022%2012:41:05.png"//"https://cdn.discordapp.com/attachments/869334941337546782/1050535050631970866/naw-mike-epps.gif"
 		}
 		console.log(result);
 		// console.log("2,",result.data.data[0].b64_json);

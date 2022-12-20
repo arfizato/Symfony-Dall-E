@@ -3,8 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 import { createClient } from '@supabase/supabase-js'
 import Swal from 'sweetalert2';
 
-const supabaseUrl = 'URLFORSUPA'
-const supabaseKey = "KEYFORSUPA"
+const {supabaseKey,supabaseUrl} = require("./secrets.json")
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 export default class extends Controller {
@@ -79,7 +78,7 @@ export default class extends Controller {
 						username: this.nameTarget.value, 
 						email: this.emailTarget.value,
 						password: this.passTarget.value,
-						credits: 5,
+						credits: 25,
 						authToken: authToken,
 						tokenExpirationDate: tokenExpirationDate
 					},

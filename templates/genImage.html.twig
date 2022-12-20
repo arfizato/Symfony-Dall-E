@@ -11,7 +11,7 @@
     <title>Generate Image Using Dall-E </title>
     <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/869334941337546782/1036327824862220378/Method_Draw_Image.png">
 </head>
-<body class="bg-blue-200 bg-gradient-to-tr from-blue-200 to-blue-400 h-fit scrollbar"{{ stimulus_controller('genimage') }}>
+<body class="bg-blue-200 bg-gradient-to-tr from-blue-200 to-blue-400 h-fit scrollbar "{{ stimulus_controller('genimage') }}>
     <div class=" min-h-screen flex items-center justify-center"  >
 
         <div class="bg-white w-10/12 absolute top-0 h-16 rounded-b-lg mx-auto flex items-center px-5 ">
@@ -41,46 +41,21 @@
                 Generate  Image
             </button>
             <br>
-            <img src="URLFORSUPA/storage/v1/object/public/symfony/Hey!.png" {{ stimulus_target('genimage', 'output') }}
+            <img src="https://paouzswmtqahihhugxtg.supabase.co/storage/v1/object/public/symfony/Hey!.png" {{ stimulus_target('genimage', 'output') }}
                 class="w-64 aspect-square m-auto rounded"/>
         </div>
 
         <a href="#imagesThisSession" class="absolute bottom-2 hidden" id="downArrowToRecent">
-            <img src="URLFORSUPA/storage/v1/object/public/symfony/arrowDown.png" class=" h-24 brightness-200 animate-bounce drop-shadow-xl" />
+            <img src="https://paouzswmtqahihhugxtg.supabase.co/storage/v1/object/public/symfony/arrowDown.png" class=" h-24 brightness-200 animate-bounce drop-shadow-xl" />
         </a>
     </div>
-
-        {# <div class="flex flex-col justify-center items-center h-80 "> 
-            <img class="w-48 rounded-md shadow-md " src="URLFORSUPA/storage/v1/object/public/symfony/arfizato0/02-12-2022%2009:14:09.png" alt="test" />
-            <p class=" h-16 py-1 overflow-y-auto scrollbar text-center align-middle "> waw </p>
-            <button class="bg-red-600 text-white px-10 py-1 rounded-md hover:scale-90 transition-all duration-200" >Delete </button>
-        </div>
-        <div class="flex flex-col justify-center items-center h-80 "> 
-            <img class="w-48 rounded-md shadow-md " src="URLFORSUPA/storage/v1/object/public/symfony/arfizato0/02-12-2022%2009:14:09.png" alt="test" />
-            <p class=" h-16 py-1 overflow-y-auto scrollbar text-center align-middle "> waw </p>
-            <button class="bg-red-600 text-white px-10 py-1 rounded-md hover:scale-90 transition-all duration-200" >Delete </button>
-        </div>
-        <div class="flex flex-col justify-center items-center h-80 "> 
-            <img class="w-48 rounded-md shadow-md " src="URLFORSUPA/storage/v1/object/public/symfony/arfizato0/02-12-2022%2009:14:09.png" alt="test" />
-            <p class=" h-16 py-1 overflow-y-auto scrollbar text-center align-middle "> waw </p>
-            <button class="bg-red-600 text-white px-10 py-1 rounded-md hover:scale-90 transition-all duration-200" >Delete </button>
-        </div>
-        
-        <div class="flex flex-col justify-center items-center h-80 " id=${"imgInGen"+userId} {{stimulus_controller("genImg")}} > 
-            <img class="w-48 rounded-md shadow-md " src=${url} alt=${prompt} />
-            <p class=" h-16 py-1 overflow-y-auto scrollbar text-center align-middle "> ${prompt} </p>
-            <button class="bg-red-600 text-white px-10 py-1 rounded-md hover:scale-90 transition-all duration-200" 
-                data-genImg-id-param=${imageId} data-genImg-parent-param=${"imgInGen"+imageId} data-action="genImg#deleteImage">
-                Delete 
-            </button>
-        </div> #}
     <section id="imagesThisSession" class="bg-white p-10 rounded-lg shadow md:w-3/4 mx-auto lg:w-3/4 
                 transition-all duration-200 
                 items-center content-center hidden grid-cols-3 gap-4 
                 h-fit mb-10" ></section>
     <script>
         // to verify if user is logged in 
-        window.onload= function(){            
+        function ifLoggedIn(json){                     
             const authToken = sessionStorage.getItem("authToken");
             const expirationDate= sessionStorage.getItem("expirationDate");
 
@@ -89,8 +64,9 @@
 				window.location.href= "/login" ;                
                 return }
             var myHeaders = new Headers();
-            myHeaders.append("apikey", "KEYFORSUPA");
-            myHeaders.append("Authorization", "Bearer KEYFORSUPA");
+            const {supabaseKey,supabaseUrl} = json;
+            myHeaders.append("apikey", supabaseKey);
+            myHeaders.append("Authorization", `Bearer ${supabaseKey}`);
 
             var requestOptions = {
                 method: 'GET',
@@ -98,27 +74,37 @@
                 redirect: 'follow'
             };
 
-            fetch("URLFORSUPA/rest/v1/User?select=tokenExpirationDate,authToken,username,role,credits&authToken=eq."+authToken, requestOptions)
+            fetch(supabaseUrl+"/rest/v1/User?select=tokenExpirationDate,authToken,username,role,credits&authToken=eq."+authToken, requestOptions)
                 .then(response => response.text())
                 .then(result => {
                     const res= JSON.parse(result)[0];
-                    console.log(res);
-                    console.log(res.authToken == authToken, res.authToken, authToken)
-                    console.log(new Date()<new Date(expirationDate), new Date(), expirationDate);
-                    if (res.authToken === authToken && new Date() < new Date(expirationDate)){
-                        console.log("already logged in");  
-                        document.getElementById("loggedUsername").innerHTML=res.username;
-                        document.getElementById("numberOfCredits").innerHTML=res.credits;
-
-                        if (res.role === "Member") return 
-                        document.getElementById("admin").classList.remove("hidden");
-                    }else {
+                    if( !(res.authToken === authToken && new Date() < new Date(expirationDate))){
                         window.location.href= "/login";
+                        return
                     }
-                    
-                })
-                .catch(error => console.log('error', error));
 
+                    console.log("already logged in");  
+                    document.getElementById("loggedUsername").innerHTML=res.username;
+                    document.getElementById("numberOfCredits").innerHTML=res.credits;
+
+                    if (res.role === "Member") return 
+                    document.getElementById("admin").classList.remove("hidden");                    
+                })
+                .catch(error => {console.log('error', error);
+                    window.location.href= "/404?apiURL=/&apiName=Home";
+                });
+
+        }
+        window.onload= function(){
+            fetch("./secrets.json")
+            .then((res)=> res.json())
+            .then((json)=>{
+                ifLoggedIn(json);
+            })
+            .catch(error =>{
+                console.log('error reading JS', error);
+                window.location.href= "/404";
+            });
         }
     </script>
 </body>
